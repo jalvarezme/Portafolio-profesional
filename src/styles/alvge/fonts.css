@@ -1,0 +1,35 @@
+/* Register your custom font family and tell the browser where to find it. */
+@font-face {
+  font-family: "montserrat-light";
+  src: url("../../assets/fonts/Montserrat-Light.woff")
+    format("woff");
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "montserrat-bold";
+  src: url("../../assets/fonts/Montserrat-Bold.woff")
+    format("woff");
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "montserrat-Black";
+  src: url("../../assets/fonts/Montserrat-Black.woff")
+    format("woff");
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "avenir-bold-italic";
+  src: url("../../assets/fonts/AvenirNextCyr-HeavyItalic.woff")
+    format("woff");
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "avenir";
+  src: url("../../assets/fonts/AvenirNextCyr-Thin.woff")
+    format("woff");
+  font-display: swap;
+}

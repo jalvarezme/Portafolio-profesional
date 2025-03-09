@@ -1,0 +1,31 @@
+.portfolio-menu__lang {
+  display: none;
+  justify-content: flex-end;
+  flex: 1;
+
+  @media (min-width: 768px) {
+    display: flex;
+  }
+
+  button {
+    background: none;
+    border: none;
+    color: black;
+    font-family: "avenir";
+    font-style: italic;
+    font-weight: bold;
+    font-size: 0.8rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    cursor: pointer;
+    img {
+      opacity: 0.7;
+      max-width: 20px;
+      max-height: 20px;
+      transition: opacity 0.3s ease;
+      &:hover {
+        opacity: 1;
+      }
+    }
+  }
+}

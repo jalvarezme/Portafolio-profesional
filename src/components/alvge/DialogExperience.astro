@@ -1,0 +1,27 @@
+---
+import '../../styles/alvge/components/dialog-experience.css';
+
+---
+
+<!-- Dialog (modal) -->
+<dialog class="work-experience-dialog">
+  <div class="dialog-content">
+    <!-- Dynamic content -->
+  </div>
+  <div class="dialog-footer">
+    <button class="button button-primary dialog-button">Close</button>
+  </div>
+</dialog>
+
+
+<script>
+  function closeModal() {
+    const dialog : HTMLDialogElement | null = document.querySelector(".work-experience-dialog");
+    dialog?.close('dialog');
+  }
+  document.querySelector(".dialog-button")?.addEventListener("click", closeModal);
+</script>
+
+<style>
+ 
+</style>

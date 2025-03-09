@@ -1,0 +1,147 @@
+---
+import "../../styles/alvge/components/timeline.css";
+import { experience } from "../../data/alvge/experience.json";
+import DialogExperience from "./DialogExperience.astro";
+
+let experienceList = experience.reduce(
+  (
+    arr: {
+      title: string;
+      icon: string;
+      start_date: string;
+      end_date: string | null;
+      duration: string;
+      description: string;
+      name: string;
+    }[],
+    exp,
+  ) => {
+    exp.roles.forEach((role) => {
+      arr.push({
+        icon: exp.icon,
+        name: exp.company,
+        ...role,
+      });
+    });
+    return arr;
+  },
+  [],
+);
+
+experienceList.sort(
+  (a, b) => new Date(b.start_date).getTime() - new Date(a.start_date).getTime(),
+);
+---
+
+<div class="timeline">
+  <div class="container">
+    <div>
+      <p class="intro">
+        <span>With over 5+</span> of experience in software engineering, I have successfully
+        designed and developed a variety of scalable web applications. My career
+        has been marked by a commitment to high performance, robust security, and
+        seamless user experiences. Below is a visual timeline showcasing my journey
+        and key milestones in the industry.
+      </p>
+    </div>
+    <div class="timeline-wrapper">
+      {
+        experienceList.map((exp, index) => {
+          const top = 56 * index;
+          return (
+            <div
+              style={`--top-sphere:-${top}px`}
+              class={`sphere sphere--${index + 1}`}
+            >
+              {/* insted of having a index, we can use a id generated, DO IT */}
+              <button class="sphere__inside" data-work-experience={index}>
+                <span class="icon" set:html={exp.icon} />
+                <span class="title">{exp.title}</span>
+              </button>
+              {index % 2 === 0 ? (
+                <>
+                  <spans class={`sphere__color sphere__color--${index + 1}`} />
+                  <span class="sphere__no-color" />
+                </>
+              ) : (
+                <>
+                  <span class="sphere__no-color" />
+                  <span class={`sphere__color sphere__color--${index + 1}`} />
+                </>
+              )}
+            </div>
+          );
+        })
+      }
+    </div>
+  </div>
+</div>
+
+<DialogExperience />
+
+<script define:vars={{ experienceList }}>
+  const timeline = document.querySelector(".timeline");
+  const timeLineModal = document.querySelector(".work-experience-dialog");
+
+  timeline.addEventListener("click", function (e) {
+    let element = e.target;
+    if ("workExperience" in element.dataset) {
+      renderModal(element);
+      openModal();
+      return;
+    }
+    element = element.closest("[data-work-experience]");
+    if (element !== null) {
+      renderModal(element);
+      openModal();
+      return;
+    }
+  });
+
+  function renderModal(element) {
+    const id = element.closest("[data-work-experience]").dataset.workExperience;
+    const { icon, title, start_date, end_date, description, name } =
+      experienceList[id];
+
+    timeLineModal.querySelector(".dialog-content").innerHTML = `
+       <div class="dialog-header">
+          <div class="icon">
+           ${icon}
+          </div>
+          <h3>${name}</h3>
+        </div>
+        <div class="dialog-main">
+          <h3 class="title">${title}</h3>
+          <h4 class="dates">${start_date} - ${!end_date ? "Present" : end_date} - ${calculateDuration(start_date, end_date)} </h4>
+          <p class="description">
+           ${description}
+          </p>
+        </div>
+    `;
+  }
+
+  function openModal() {
+    timeLineModal.showModal();
+  }
+
+  function calculateDuration(startDate, endDate) {
+    const start = new Date(startDate);
+    const end = new Date(endDate || "");
+
+    // Calculate the difference in years and months
+    let years = end.getFullYear() - start.getFullYear();
+    let months = end.getMonth() - start.getMonth();
+
+    if (months < 0) {
+      years--;
+      months += 12;
+    }
+
+    const yearStr = years > 0 ? `${years} years` : "";
+    const monthStr = months > 0 ? `${months} months` : "";
+
+    const duration = `${yearStr} ${monthStr}`.trim();
+
+    return duration || ""; // Return "0 months" if there's no duration
+  }
+</script>

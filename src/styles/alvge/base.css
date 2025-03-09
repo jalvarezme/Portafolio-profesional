@@ -1,0 +1,89 @@
+h1, h2, h3 {
+  font-family: "monserrat-bold", sans-serif;
+  line-height: 1em;
+}
+
+p {
+  font-family: "avenir", sans-serif;
+  line-height: 1.6;
+  font-weight: 400;
+}
+
+html {
+  /* 000025 */
+  --blue--1: #00003b; 
+  --blue--2: #00217c;
+  --blue--3: #e0fcff;
+  --green--1: #013314;
+  --green--2: #c3ffda;
+  --yellow--3: #ffffcd;
+  --yellow--4: #ffffd6;
+  --purple--1: #e1cdff;
+}
+
+dialog::backdrop {
+  background-color: #00001b7e;
+}
+
+/* Container */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding-inline: 16px;
+  width: 100%;
+}
+
+/* General Button Styles */
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75em 1.5em;
+  min-width: 120px;
+  letter-spacing: 0.15em;
+  line-height: 1rem;
+  font-size: 0.875rem; /* Slightly larger for readability */
+  border: 2px solid transparent;
+  border-radius: 8px;
+  background-origin: border-box;
+  cursor: pointer;
+  outline: none;
+  font-family: "Montserrat", sans-serif;
+  text-transform: uppercase;
+  font-weight: bold;
+  transition: all 0.3s ease-in-out;
+}
+
+/* Primary Button */
+.button-primary {
+  color: white;
+  background: var(--blue--1);
+  border: 2px solid var(--blue--1);
+}
+
+.button-primary:hover {
+  color: var(--blue--1);
+  background: white;
+  border-color: var(--blue--1);
+}
+
+/* Secondary Button */
+.button-secondary {
+  color: var(--blue--1);
+  background: white;
+  border: 2px solid var(--blue--1);
+}
+
+.button-secondary:hover {
+  color: white;
+  background: var(--blue--1);
+  border-color: var(--blue--1);
+}
+
+/* Responsive Button Size */
+@media (max-width: 768px) {
+  .button {
+    font-size: 0.75rem;
+    padding: 0.5em 1.2em;
+  }
+}

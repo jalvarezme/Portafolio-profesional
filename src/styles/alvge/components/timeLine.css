@@ -1,0 +1,142 @@
+  /* Base styles */
+  .timeline {
+    background-color: #f5f5f7;
+
+    .container {
+      display: flex;
+      justify-content: space-between;
+      flex-direction: column;
+      align-items: center;
+
+      @media (min-width: 992px) {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+      }
+    }
+  }
+
+  /* move this to timeline an refactor the timeline */
+  .intro {
+    max-width: 540px;
+    text-align: center;
+    margin-bottom: 0rem;
+    margin-top: 4rem;
+
+    @media (min-width: 992px) {
+      font-size: 1.125rem;
+      text-align: left;
+      margin-bottom: 1rem;
+      padding-bottom: 8rem;
+    }
+
+    span {
+      font-family: 'montserrat-Black';
+      /* color: rgb(142, 168, 218); */
+      font-size: 2.5rem;
+      font-weight: 700;
+      line-height: 1rem;
+
+      @media (min-width: 992px) {
+        font-size: 3rem;
+      }
+    }
+  }
+
+  .timeline-wrapper {
+    justify-self: center;
+    align-self: center;
+    transform: translateY(80px);
+  }
+
+  /* Sphere styles */
+  .sphere {
+    width: 15rem;
+    height: 15rem;
+    border-radius: 50%;
+    overflow: hidden;
+    display: flex;
+    position: relative;
+    top: var(--top-sphere);
+  }
+
+  .sphere__inside {
+    border: none;
+    border-radius: 50%;
+    position: absolute;
+    width: 8rem;
+    height: 8rem;
+    top: 50%;
+    left: 50%;
+    background: linear-gradient(141deg,
+        rgba(242, 242, 242, 1) 43%,
+        rgba(221, 221, 221, 1) 72%,
+        rgba(166, 166, 166, 1) 100%);
+    box-shadow: 10px 11px 20px rgb(63 63 63 / 53%);
+    transform: translate(-50%, -50%);
+    z-index: 2;
+    cursor: pointer;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+
+    .icon svg {
+      width: 100%;
+      height: 100%;
+      max-width: 32px;
+    }
+
+    .title {
+      font-size: 0.8rem;
+      font-family: "avenir", sans-serif;
+      line-height: 1em;
+      font-weight: bold;
+    }
+  }
+
+  /* Modifiers for spheres color states */
+  .sphere__color {
+    background: rgb(6, 6, 66);
+    background: linear-gradient(0deg,
+        rgba(6, 6, 66, 1) 23%,
+        rgba(0, 0, 37, 1) 100%);
+    display: block;
+    flex: 1;
+    z-index: 1;
+  }
+
+  .sphere__color--2 {
+    background: rgb(6, 53, 66);
+    background: linear-gradient(0deg,
+        rgba(6, 53, 66, 1) 13%,
+        rgba(6, 6, 66, 1) 74%);
+  }
+
+  .sphere__color--3 {
+    background: rgb(6, 53, 66);
+    background: linear-gradient(0deg,
+        rgba(6, 6, 66, 1) 13%,
+        rgba(6, 53, 66, 1) 74%);
+  }
+
+  .sphere__color--4 {
+    background: rgb(6, 6, 66);
+    background: linear-gradient(0deg,
+        rgba(0, 0, 37, 1)23%,
+        rgba(6, 6, 66, 1) 100%);
+  }
+
+  .sphere__no-color {
+    background-color: white;
+    flex: 1;
+  }
+
+  /* Container for the timeline */
+  .timeline {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+  }

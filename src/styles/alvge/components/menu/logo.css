@@ -1,0 +1,21 @@
+.portfolio-menu__link-logo {
+  display: flex;
+  align-items: center;
+  color: black;
+  text-decoration: none;
+  flex: 1;
+
+  svg {
+    width: 34px;
+    height: 34px;
+    margin-right: 0.75rem;
+  }
+
+  .portfolio-menu__logo-name {
+    font-family: "montserrat-light";
+    line-height: 1rem;
+    font-size: 0.75rem;
+    letter-spacing: 0.8rem;
+    font-weight: bold;
+  }
+}

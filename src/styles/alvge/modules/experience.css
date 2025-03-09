@@ -1,0 +1,19 @@
+.experience {
+  --size: 56px;
+  min-height: 100vh;
+  padding: 6rem 0;
+}
+
+.experience__title {
+  font-family: 'montserrat-Black';
+  font-size: 3rem;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 1rem;
+
+  @media (min-width: 992px) {
+    font-size: 6rem;
+    text-align: right;
+  }
+}
+

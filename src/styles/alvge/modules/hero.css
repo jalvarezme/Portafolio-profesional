@@ -1,0 +1,64 @@
+.hero-banner {
+  /* background-color: black; */
+  color: black;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  position: relative;
+  background: rgb(241, 255, 255);
+  background: linear-gradient(121deg, rgba(241, 255, 255, 1) 2%, rgba(255, 255, 255, 1) 22%);
+
+  svg {
+    position: absolute;
+    opacity: .9;
+    max-height: 40vh;
+  }
+
+  .hero-banner__title,
+  .hero-banner__description {
+    font-family: "montserrat-light", sans-serif;
+    position: relative;
+    z-index: 1;
+  }
+
+  .hero-banner__title {
+    font-size: 4.5rem;
+    line-height: 1em;
+    letter-spacing: 0.4rem;
+
+    @media (min-width: 768px) {
+      font-size: 6.5rem;
+      letter-spacing: 2rem;
+      margin-right: -30px;
+    }
+  }
+
+  .hero-banner__description {
+    position: relative;
+    font-family: "montserrat-light";
+    font-weight: bold;
+    display: inline;
+    letter-spacing: 0.8rem;
+    font-size: 0.7rem;
+
+    @media (min-width: 768px) {
+      font-size: 1rem;
+    }
+
+    &::after {
+      content: attr(data-content-logo);
+      position: absolute;
+      top: 0;
+      left: 0;
+      transform: rotateX(180deg);
+      line-height: 3.25rem;
+      transform-origin: center center;
+      background: linear-gradient(to top, black, transparent);
+      -webkit-background-clip: text;
+      color: transparent;
+      opacity: 0.6;
+    }
+  }
+}
