@@ -1,5 +1,6 @@
 .about {
   min-height: 100vh;
+  position: relative;
   background: rgb(2, 2, 37);
   background: rgb(255, 255, 255);
   background: linear-gradient(
@@ -7,6 +8,20 @@
     #ffffff 60%,
     #f5f5f7 60%
   );
+
+  .about__logo {
+    display: none;
+
+    @media (min-width: 992px) {
+      position: absolute;
+      opacity: .5;
+      max-height: 50vh;
+      z-index: 0;
+      right: -5%;
+      bottom: 0;
+      display: block;
+    }
+  }
 
   @media (min-width: 992px) {
     display: flex;
@@ -26,6 +41,8 @@
   align-items: center;
   padding: 6em 0;
   gap: 32px;
+  position: relative;
+  z-index: 2;
 
   @media (min-width: 992px) {
     flex-direction: row;
@@ -63,7 +80,7 @@
    gap: 24px;
   }
 
-  .about__profile-wraper {
+  .about__profile-wrapper {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -104,6 +121,7 @@
     justify-content: center;
     gap: 24px;
     padding: 12px;
+    position: relative;
 
     svg {
       fill: black;

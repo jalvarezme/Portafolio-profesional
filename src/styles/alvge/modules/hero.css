@@ -1,5 +1,6 @@
 .hero-banner {
   /* background-color: black; */
+  overflow-x: clip ;
   color: black;
   height: 100vh;
   display: flex;
@@ -8,7 +9,16 @@
   text-align: center;
   position: relative;
   background: rgb(241, 255, 255);
-  background: linear-gradient(121deg, rgba(241, 255, 255, 1) 2%, rgba(255, 255, 255, 1) 22%);
+  background: linear-gradient(121deg, #f1ffff 2%, #ffffff 22%);
+
+
+  .gadient {
+    position: absolute;
+    top: 0;
+    right: -10%;
+    scale: 2;
+    opacity: 0.5;
+  }
 
   svg {
     position: absolute;

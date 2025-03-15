@@ -35,44 +35,52 @@ experienceList.sort(
 
 <div class="timeline">
   <div class="container">
-    <div>
-      <p class="intro">
-        <span>With over 5+</span> of experience in software engineering, I have successfully
-        designed and developed a variety of scalable web applications. My career
-        has been marked by a commitment to high performance, robust security, and
-        seamless user experiences. Below is a visual timeline showcasing my journey
-        and key milestones in the industry.
-      </p>
-    </div>
-    <div class="timeline-wrapper">
-      {
-        experienceList.map((exp, index) => {
-          const top = 56 * index;
-          return (
-            <div
-              style={`--top-sphere:-${top}px`}
-              class={`sphere sphere--${index + 1}`}
-            >
-              {/* insted of having a index, we can use a id generated, DO IT */}
-              <button class="sphere__inside" data-work-experience={index}>
-                <span class="icon" set:html={exp.icon} />
-                <span class="title">{exp.title}</span>
-              </button>
-              {index % 2 === 0 ? (
-                <>
-                  <spans class={`sphere__color sphere__color--${index + 1}`} />
-                  <span class="sphere__no-color" />
-                </>
-              ) : (
-                <>
-                  <span class="sphere__no-color" />
-                  <span class={`sphere__color sphere__color--${index + 1}`} />
-                </>
-              )}
-            </div>
-          );
-        })
-      }
+    <div class="timeline__container">
+      <div>
+        <p class="timeline__intro">
+          <span>With over 5+</span> of experience in software engineering, I have
+          successfully designed and developed a variety of scalable web applications.
+          My career has been marked by a commitment to high performance, robust security,
+          and seamless user experiences. Below is a visual timeline showcasing my
+          journey and key milestones in the industry.
+        </p>
+      </div>
+      <div class="timeline__wrapper">
+        {
+          experienceList.map((exp, index) => {
+            const top = 56 * index;
+            return (
+              <div
+                style={`--top-sphere:-${top}px`}
+                class={`timeline__sphere timeline__sphere--${index + 1}`}
+              >
+                <button
+                  class="timeline__sphere-inside"
+                  data-work-experience={index}
+                >
+                  <span class="timeline__icon" set:html={exp.icon} />
+                  <span class="timeline__title">{exp.title}</span>
+                </button>
+                {index % 2 === 0 ? (
+                  <>
+                    <span
+                      class={`timeline__sphere-color timeline__sphere-color--${index + 1}`}
+                    />
+                    <span class="timeline__sphere-no-color" />
+                  </>
+                ) : (
+                  <>
+                    <span class="timeline__sphere-no-color" />
+                    <span
+                      class={`timeline__sphere-color timeline__sphere-color--${index + 1}`}
+                    />
+                  </>
+                )}
+              </div>
+            );
+          })
+        }
+      </div>
     </div>
   </div>
 </div>
