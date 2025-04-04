@@ -1,0 +1,185 @@
+---
+import "../../styles/appointment/components/modal.css";
+import CardAuthUserModal from "./CardAuthUserModal.astro";
+import GoogleAuth from "./GoogleAuthCTA.astro";
+---
+
+<dialog class="modal-auth" data-auth-modal="signup">
+  <div class="modal__header">
+    <div data-auth-element="signin">
+      <h3 class="modal__title">Sign in to your account</h3>
+    </div>
+    <div data-auth-element="signup">
+      <h3 class="modal__title">Sign up to your account</h3>
+    </div>
+    <button class="modal__close" aria-label="Close modal" data-close-modal>
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M6 18L18 6M6 6l12 12"></path>
+      </svg>
+    </button>
+  </div>
+  <div class="modal__content">
+    <CardAuthUserModal />
+    <GoogleAuth />
+    <div class="modal-actions">
+      <button type="button" class="btn btn--outline" data-close-modal>
+        Cancel
+      </button>
+    </div>
+  </div>
+</dialog>
+
+<div id="modal-overlay" class="modal__overlay"></div>
+
+<script>
+  import { stateModalAuth } from "./stateModalAuth";
+
+  interface ModalSystem {
+    modal: HTMLDialogElement | null;
+    modalOverlay: HTMLElement | null;
+  }
+  // Initialize modal system
+  function initializeModals(): ModalSystem {
+    return {
+      modal: document.querySelector("[data-auth-modal]"),
+      modalOverlay: document.getElementById("modal-overlay"),
+    };
+  }
+
+  // Set up all event listeners
+  function setupModalEventListeners(system: ModalSystem): void {
+    document.addEventListener("click", (e) => handleDocumentClick(e, system));
+    system.modalOverlay?.addEventListener("click", () => closeModal(system));
+    document.addEventListener("keydown", (e) => handleKeyDown(e, system));
+    system.modal?.addEventListener("close-auth-modal", () =>
+      closeModal(system),
+    );
+  }
+
+  function handleDocumentClick(event: Event, system: ModalSystem): void {
+    const target = event.target as Element;
+    if (!target) return;
+
+    const openAuthModalBtn = target.closest("[data-open-auth]") as HTMLElement;
+    const closeModalBtn = target.closest("[data-close-modal], .modal__close");
+
+    if (openAuthModalBtn) {
+      openModal(openAuthModalBtn.dataset.openAuth || "", system);
+    } else if (closeModalBtn) {
+      closeModal(system);
+    }
+  }
+
+  function handleKeyDown(event: KeyboardEvent, system: ModalSystem): void {
+    if (event.key === "Escape") {
+      closeModal(system);
+    }
+  }
+
+  function openModal(type: string, system: ModalSystem): void {
+    if (!type) return;
+
+    if (!system.modal) {
+      return;
+    }
+
+    system.modal?.showModal();
+    system.modalOverlay?.classList.add("active");
+    system.modal.dataset.authModal = type;
+    stateModalAuth.mode = type;
+    stateModalAuth.mode = type;
+    console.log(stateModalAuth);
+    document.body.style.overflow = "hidden";
+  }
+
+  export function closeModal(system: ModalSystem): void {
+    const openModal = document.querySelector(
+      "dialog[open]",
+    ) as HTMLDialogElement;
+    if (!openModal) return;
+
+    openModal.classList.add("closing");
+    openModal.addEventListener(
+      "animationend",
+      () => {
+        openModal.classList.remove("closing");
+        openModal.close();
+        system.modalOverlay?.classList.remove("active");
+        document.body.style.overflow = "";
+      },
+      { once: true },
+    );
+  }
+
+  export const modalSystem = initializeModals();
+  stateModalAuth.modal = modalSystem.modal;
+  setupModalEventListeners(modalSystem);
+</script>
+
+<style>
+  [data-auth-modal="signup"] {
+    [data-auth-element="signup"] {
+      display: block;
+    }
+
+    [data-auth-element="signin"] {
+      display: none;
+    }
+  }
+
+  [data-auth-modal="signin"] {
+    [data-auth-element="signup"] {
+      display: none;
+    }
+
+    [data-auth-element="signin"] {
+      display: block;
+    }
+  }
+
+  .user-info-container {
+    margin-bottom: 1.5rem;
+  }
+
+  .user-info-card {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    background-color: #f8f9fa;
+    border-radius: 0.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .user-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+
+  .user-details {
+    flex: 1;
+  }
+
+  .user-name {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 500;
+  }
+
+  .user-email {
+    margin: 0;
+    font-size: 0.875rem;
+    color: #6c757d;
+  }
+</style>

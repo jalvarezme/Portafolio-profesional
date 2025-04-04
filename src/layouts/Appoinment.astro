@@ -1,0 +1,25 @@
+---
+import Modal from "../components/appointment/ModalAuth.astro";
+import Footer from "../modules/appointment/Footer.astro";
+import Header from "../modules/appointment/Header.astro";
+import "../styles/appointment/base.css";
+import "../styles/alvge/normalize.css";
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<meta name="generator" content={Astro.generator} />
+		<title>appointment</title>
+	</head>
+	<body>
+		<Header />
+		<slot />
+		<Footer />
+		<!-- Render all modals in one place -->
+		<Modal />
+	</body>
+</html>

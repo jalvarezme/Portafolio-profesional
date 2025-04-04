@@ -86,7 +86,7 @@
     align-items: center;
     gap: 24px;
 
-    .separator {
+    .about__separator {
       width: 15%;
       border: 1px solid var(--blue--3);
     }

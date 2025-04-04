@@ -1,0 +1,139 @@
+---
+import "../../styles/appointment/components/cardAuthUserModal.css";
+---
+
+<!-- Single container for all states -->
+<div id="user-info-section" class="user-info-container">
+  <div class="user-info-status"></div>
+</div>
+
+<script>
+  import { AuthStorage, UserStorage } from "../../helpers";
+  import { stateModalAuth } from "./stateModalAuth";
+  import { AUTH_ENDPOINTS } from "../../const";
+
+  interface UserInfo {
+    profilePicture?: string;
+    name?: string;
+    email?: string;
+  }
+
+  const state: {
+    status: "idle" | "loading" | "success" | "error";
+    userInfo: UserInfo | null;
+    error: string | null;
+  } = {
+    status: "idle", // 'idle' | 'loading' | 'success' | 'error'
+    userInfo: null,
+    error: null,
+  };
+
+  // DOM Elements
+  const userInfoSection = document.querySelector(
+    "#user-info-section",
+  ) as HTMLElement;
+  const userInfoStatus = userInfoSection?.querySelector(
+    ".user-info-status",
+  ) as HTMLElement;
+
+  // Set up listeners
+  function setUpListeners() {
+    stateModalAuth.modal?.addEventListener("fetched-user-auth-modal", () =>
+      fetchUserInfo(),
+    );
+  }
+
+  document.addEventListener("DOMContentLoaded", setUpListeners);
+
+  // Main render function
+  function render() {
+    console.log(state.status, userInfoSection);
+    switch (state.status) {
+      case "loading":
+        userInfoStatus.innerHTML = `
+          <div class="status-container status-loading">
+            <div class="status-message">
+              <span class="loading-spinner"></span>
+              <span>Loading your information...</span>
+            </div>
+          </div>
+        `;
+        break;
+
+      case "error":
+        userInfoStatus.innerHTML = `
+          <div class="status-container status-error">
+            <div class="status-message">
+              <span>⚠️ ${state.error || "Failed to fetch user information"}</span>
+            </div>
+          </div>
+        `;
+        break;
+
+      case "success":
+        userInfoStatus.innerHTML = `
+          <div class="user-info-card">
+            <img id="user-avatar" src="${state.userInfo?.profilePicture || ""}" 
+                 alt="User avatar" class="user-avatar" />
+            <div class="user-details">
+              <h4 class="user-name">${state.userInfo?.name || "Google User"}</h4>
+              <p class="user-email">${state.userInfo?.email || ""}</p>
+            </div>
+          </div>
+          <button type="button" id="continue-button" class="btn btn--primary">
+            Continue
+          </button>
+        `;
+        const continueButton =
+          userInfoSection.querySelector("#continue-button");
+        continueButton?.addEventListener("click", () => {
+          stateModalAuth.modal?.dispatchEvent(
+            new CustomEvent("close-auth-modal"),
+          );
+        });
+        break;
+      default:
+        userInfoSection.style.display = "none";
+    }
+  }
+
+  async function fetchUserInfo() {
+    try {
+      // Update state to loading
+      state.status = "loading";
+      state.userInfo = null;
+      state.error = null;
+      render();
+
+      const endpoint =
+        AUTH_ENDPOINTS[stateModalAuth.mode as keyof typeof AUTH_ENDPOINTS];
+
+      const response = await fetch(endpoint, {
+        method: "POST",
+        credentials: "include", // required for cookies
+        headers: {
+          "Content-Type": "application/json", // Explicitly set content type
+        },
+        body: JSON.stringify(AuthStorage.getToken()),
+      });
+
+      if (!response.ok) throw new Error("Failed to get user info");
+
+      const { data } = await response.json();
+
+      // Update state to success
+      state.status = "success";
+      state.userInfo = data?.user;
+      UserStorage.setData(JSON.stringify(state.userInfo));
+      
+    } catch (error: any) {
+      // Update state to error
+      state.status = "error";
+      state.error = error.message || "Failed to fetch user information";
+
+      console.error("Error fetching user info:", error);
+    } finally {
+      render();
+    }
+  }
+</script>

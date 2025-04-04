@@ -1,0 +1,80 @@
+/* Minimalist Container */
+.user-info-container {
+  width: 280px;
+  margin: 0rem auto;
+  padding: 24px;
+  background: white;
+
+
+  /* Status Messages */
+  .status-container {
+    padding: 16px;
+    text-align: center;
+    font-size: 13px;
+    color: #555;
+  }
+
+  .status-loading {
+    background: #fafafa;
+    border-radius: 8px;
+  }
+
+  .status-error {
+    background: #fff5f5;
+    color: #ff4d4d;
+    border-radius: 8px;
+  }
+
+  /* Delicate Loading Spinner */
+  .loading-spinner {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    border: 2px solid rgba(0, 0, 0, 0.05);
+    border-top-color: #888;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin-right: 8px;
+  }
+
+  @keyframes spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  /* Compact User Card */
+  .user-info-card {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+
+  .user-avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 1px solid #f0f0f0;
+  }
+
+  .user-details {
+    flex: 1;
+  }
+
+  .user-name {
+    margin: 0;
+    font-size: 15px;
+    font-weight: 500;
+    color: #333;
+    text-transform: capitalize;
+    letter-spacing: 0.2px;
+  }
+
+  .user-email {
+    margin: 3px 0 0;
+    font-size: 13px;
+    color: #777;
+  }
+}

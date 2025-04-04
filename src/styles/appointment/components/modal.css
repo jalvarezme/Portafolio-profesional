@@ -1,0 +1,154 @@
+/* src/styles/modal.css */
+dialog {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  max-width: 420px;
+  padding: 0;
+  border: none;
+  border-radius: var(--rounded-lg);
+  box-shadow: var(--shadow-lg);
+  background-color: var(--white);
+  z-index: 100;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease-out;
+}
+
+dialog[open] {
+  opacity: 1;
+  visibility: visible;
+  animation: modalFadeIn 0.3s ease-out forwards;
+}
+
+dialog.closing {
+  animation: modalFadeOut 0.2s ease-in forwards;
+}
+
+@keyframes modalFadeIn {
+  from {
+      opacity: 0;
+      transform: translate(-50%, -48%);
+  }
+  to {
+      opacity: 1;
+      transform: translate(-50%, -50%);
+  }
+}
+
+@keyframes modalFadeOut {
+  from {
+      opacity: 1;
+      transform: translate(-50%, -50%);
+  }
+  to {
+      opacity: 0;
+      transform: translate(-50%, -48%);
+      visibility: hidden;
+  }
+}
+
+.modal__overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  z-index: 99;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease-out;
+}
+
+.modal__overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.modal__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.5rem;
+  border-bottom: 1px solid var(--gray-200);
+}
+
+.modal__title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--gray-900);
+}
+
+.modal__close {
+  background: none;
+  border: none;
+  padding: 0.25rem;
+  cursor: pointer;
+  color: var(--gray-500);
+  transition: color 0.2s;
+}
+
+.modal__close:hover {
+  color: var(--gray-700);
+}
+
+.modal__close svg {
+  display: block;
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+.modal__content {
+  padding: 1.5rem;
+}
+
+.modal__footer {
+  padding: 1.5rem;
+  border-top: 1px solid var(--gray-200);
+  text-align: right;
+}
+
+/* Form Styles */
+.form-group {
+  margin-bottom: 1.25rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--gray-700);
+}
+
+.form-control {
+  width: 100%;
+  padding: 0.625rem 0.875rem;
+  border: 1px solid var(--gray-300);
+  border-radius: var(--rounded-md);
+  font-size: 0.9375rem;
+  color: var(--gray-800);
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.form-control:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.form-text {
+  margin-top: 0.25rem;
+  font-size: 0.75rem;
+  color: var(--gray-500);
+}
+
+.form-actions {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+}
