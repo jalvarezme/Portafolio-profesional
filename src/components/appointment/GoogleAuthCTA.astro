@@ -105,9 +105,10 @@
         setTimeout(() => {
           hideStatus();
         }, 3000);
-        AuthStorage.setToken(response.data);
         stateModalAuth.modal?.dispatchEvent(
-          new CustomEvent("fetched-user-auth-modal"),
+          new CustomEvent("fetched-user-auth-modal", {
+            detail: response.data,
+          }),
         );
       }
 

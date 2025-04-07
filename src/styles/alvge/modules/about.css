@@ -1,13 +1,25 @@
 .about {
-  min-height: 100vh;
+  min-height: 130vh;
   position: relative;
-  background: rgb(2, 2, 37);
+  /* background: rgb(2, 2, 37);
   background: rgb(255, 255, 255);
   background: linear-gradient(
     0deg,
     #ffffff 60%,
     #f5f5f7 60%
-  );
+  ); */
+  background: rgb(241, 255, 255);
+  background: linear-gradient(121deg, #f1ffff 2%, #ffffff 22%);
+  background-color: #ffffff;
+  background-image: linear-gradient(#f5f5f791 4px, transparent 4px), linear-gradient(to right, #f5f5f791 4px, #ffffffc7 4px);
+  background-size: 150px 150px;
+  background-position: center center;
+
+  .container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
 
   .about__logo {
     display: none;
@@ -25,13 +37,12 @@
 
   @media (min-width: 992px) {
     display: flex;
-    justify-content: center;
+    /* justiy-content: center;
     flex-direction: column;
-    background: linear-gradient(
-      90deg,
-      #f5f5f7 36%,
-      rgba(255, 255, 255, 1) 36%
-    );
+    background: linear-gradient(90deg,
+        #f5f5f7 36%,
+        rgba(255, 255, 255, 1) 36%);
+  */
   }
 }
 
@@ -52,7 +63,8 @@
   }
 }
 
-.about__profile, .about__description {
+.about__profile,
+.about__description {
   flex: 1;
   width: 100%;
   max-width: 340px;
@@ -67,17 +79,15 @@
   border-radius: 8px;
   overflow: hidden;
   box-shadow: -1px -1px 20px rgba(187, 187, 187, 0.75);
-  background: radial-gradient(
-    circle,
-    var(--blue--1) 0%,
-    rgba(0, 0, 0, 1) 100%
-  );
+  background: radial-gradient(circle,
+      var(--blue--1) 0%,
+      rgba(0, 0, 0, 1) 100%);
   color: white;
   gap: 64px;
 
-  
+
   @media (min-width: 992px) {
-   gap: 24px;
+    gap: 24px;
   }
 
   .about__profile-wrapper {
@@ -141,7 +151,7 @@
   max-width: 544px;
   padding-top: 24px;
   text-align: center;
-  
+
   @media (min-width: 992px) {
     text-align: left;
   }

@@ -22,9 +22,9 @@ export const Storage = {
   set: <T>(key: string, value: T, expiresInHours?: number): void => {
     const data = {
       value,
-      ...(expiresInHours && { 
-        expiresAt: Date.now() + (expiresInHours * 60 * 60 * 1000) 
-      })
+      ...(expiresInHours && {
+        expiresAt: Date.now() + (expiresInHours * 60 * 60 * 1000),
+      }),
     };
     localStorage.setItem(key, JSON.stringify(data));
   },
@@ -40,12 +40,12 @@ export const Storage = {
 
     try {
       const { value, expiresAt } = JSON.parse(item);
-      
+
       if (expiresAt && Date.now() > expiresAt) {
         Storage.remove(key);
         return null;
       }
-      
+
       return value as T;
     } catch (e) {
       console.error(`Failed to parse storage data for key "${key}"`, e);
@@ -68,9 +68,8 @@ export const Storage = {
    */
   has: (key: string): boolean => {
     return Storage.get(key) !== null;
-  }
+  },
 };
-
 
 // storage.js
 export const Session = {
@@ -83,9 +82,9 @@ export const Session = {
   set: <T>(key: string, value: T, expiresInHours?: number): void => {
     const data = {
       value,
-      ...(expiresInHours && { 
-        expiresAt: Date.now() + (expiresInHours * 60 * 60 * 1000) 
-      })
+      ...(expiresInHours && {
+        expiresAt: Date.now() + (expiresInHours * 60 * 60 * 1000),
+      }),
     };
     sessionStorage.setItem(key, JSON.stringify(data));
   },
@@ -101,12 +100,12 @@ export const Session = {
 
     try {
       const { value, expiresAt } = JSON.parse(item);
-      
+
       if (expiresAt && Date.now() > expiresAt) {
         Storage.remove(key);
         return null;
       }
-      
+
       return value as T;
     } catch (e) {
       console.error(`Failed to parse storage data for key "${key}"`, e);
@@ -129,39 +128,49 @@ export const Session = {
    */
   has: (key: string): boolean => {
     return Storage.get(key) !== null;
-  }
+  },
 };
-
 
 export const AuthStorage = {
   setToken: (token: string, expiresInHours = 24): void => {
-    Session.set('auth', { token }, expiresInHours);
+    Session.set("auth", { token }, expiresInHours);
   },
   getToken: (): string | null => {
-    const data = Session.get<{ token: string }>('auth');
+    const data = Session.get<{ token: string }>("auth");
     return data?.token || null;
   },
   clearToken: (): void => {
-    Session.remove('auth');
+    Session.remove("auth");
   },
   hasToken: (): boolean => {
-    return Session.has('auth');
-  }
+    return Session.has("auth");
+  },
 };
 
 // authStorage.js - Example of specialized wrapper
 export const UserStorage = {
   setData: (data: string, expiresInHours = 24): void => {
-    Storage.set('user-data', { data }, expiresInHours);
+    Storage.set("user-data", { data }, expiresInHours);
   },
   getData: (): string | null => {
-    const data = Storage.get<{ data: string }>('user-data');
+    const data = Storage.get<{ data: string }>("user-data");
     return data?.data || null;
   },
   clearData: (): void => {
-    Storage.remove('user-data');
+    Storage.remove("user-data");
   },
   hasData: (): boolean => {
-    return Storage.has('user-data');
-  }
+    return Storage.has("user-data");
+  },
 };
+
+export function getCookie(name: string) {
+  const cookies = document.cookie.split(";");
+  for (let cookie of cookies) {
+    let [key, value] = cookie.trim().split("=");
+    if (key === name) {
+      return decodeURIComponent(value);
+    }
+  }
+  return null;
+}

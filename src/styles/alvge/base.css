@@ -41,7 +41,7 @@ dialog::backdrop {
   padding: 0.75em 1.5em;
   min-width: 120px;
   letter-spacing: 0.15em;
-  line-height: 1rem;
+  line-height: normal;
   font-size: 0.875rem; /* Slightly larger for readability */
   border: 2px solid transparent;
   border-radius: 8px;

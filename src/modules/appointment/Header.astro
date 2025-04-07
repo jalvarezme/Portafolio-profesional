@@ -1,26 +1,81 @@
 ---
-import '../../styles/appointment/components/header.css'
+import "../../styles/appointment/components/header.css";
 ---
 
 <header>
-  <div class="container">
-      <nav class="navbar">
-          <a href="/" class="navbar__logo">
-              <img src="https://fakeimg.pl/32x32" alt="Appointly Logo">
-              <span>Appointly</span>
-          </a>
-          
-          <div class="navbar__links">
-              <a href="#services">Services</a>
-              <a href="#faq">FAQ</a>
-              <a href="#">About</a>
-              <a href="#">Contact</a>
-          </div>
-          
-          <div class="navbar__cta navbar__cta--auth">
-              <button class="btn btn--outline" data-open-auth="signin" >Sign in</button>
-              <button class="btn btn--primary" data-open-auth="signup" >Sign up</button>
-          </div>
-      </nav>
-  </div>
+    <div class="container">
+        <nav class="navbar">
+            <a href="/appointment/home" class="navbar__logo">
+                <img src="https://fakeimg.pl/32x32" alt="Appointly Logo" />
+                <span>Appointly</span>
+            </a>
+
+            <div class="navbar__links">
+                <a href="/appointment/home#services">Services</a>
+                <a href="#faq">FAQ</a>
+                <a href="#">About</a>
+                <a href="#">Contact</a>
+            </div>
+
+            <div class="navbar__cta navbar__cta--auth" data-controls="non-auth">
+                <button class="btn btn--outline" data-open-auth="signin">
+                    Sign in
+                </button>
+                <button class="btn btn--primary" data-open-auth="signup">
+                    Sign up
+                </button>
+                <button class="btn btn--outline" data-logout> logout </button>
+            </div>
+        </nav>
+    </div>
 </header>
+
+<script>
+    import { BASE_URL } from "../../const";
+    import { UserStorage, getCookie } from "../../helpers";
+
+    const header = document.querySelector("header");
+    const constrolsAuth = header?.querySelector(
+        "[data-controls]",
+    ) as HTMLElement;
+
+    document.body?.addEventListener("auth-done", (e) => {
+        if ("controls" in constrolsAuth?.dataset) {
+            constrolsAuth.dataset.controls = "auth";
+        }
+    });
+
+    constrolsAuth
+        .querySelector("[data-logout]")
+        ?.addEventListener("click", () => {
+            logout();
+        });
+
+    async function logout() {
+        try {
+            const response = await fetch(`${BASE_URL}/auth/logout`, {
+                method: "POST",
+                credentials: "include",
+            });
+            if (!response.ok) {
+                throw new Error("Failed to fetch doctors");
+            }
+            const { status, data } = await response.json();
+            document.cookie =
+                "auth=; path=/; secure; samesite=strict; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+            UserStorage?.clearData();
+            constrolsAuth.dataset.controls = "non-auth";
+            window.location.replace("http://localhost:4321/appointment/home");
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    (function () {
+        const isAuth = getCookie("auth");
+        if (isAuth) {
+            constrolsAuth.dataset.controls = "auth";
+            return;
+        }
+    })();
+</script>

@@ -6,6 +6,23 @@ header {
   backdrop-filter: blur(8px);
   z-index: 50;
   border-bottom: 1px solid var(--gray-200);
+
+  [data-controls="non-auth"] {
+    [data-logout] {
+      display: none;
+    }
+    [data-open-auth]{
+      display: block;
+    }
+  }
+  [data-controls="auth"] {
+    [data-logout] {
+      display: block;
+    }
+    [data-open-auth]{
+      display: none;
+    }
+  }
 }
 
 .navbar {

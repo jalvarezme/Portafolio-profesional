@@ -1,17 +1,19 @@
 ---
-import '../../styles/appointment/components/hero.css'
+import "../../styles/appointment/components/hero.css";
+
+const { tittle, description } = Astro.props;
 ---
 
-  <!-- Hero -->
-  <section class="hero">
+<!-- Hero -->
+<section class="hero">
     <div class="container">
         <div class="hero__content">
-            <h1 class="hero__title">Book appointments with ease</h1>
+            <h1 class="hero__title">{tittle}</h1>
             <p class="hero__description">
-                Schedule your services online in just a few clicks. Our platform connects you with top professionals in your area.
+                {description}
             </p>
             <div class="hero__cta">
-                <a href="#" class="btn btn--primary">Book now</a>
+                <a href=/appointment/home#faq" class="btn btn--primary">See FAQ</a>
                 <a href="#" class="btn btn--outline">Learn more</a>
             </div>
         </div>

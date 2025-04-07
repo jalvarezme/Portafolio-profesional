@@ -1,0 +1,219 @@
+---
+import "../../styles/appointment/components/doctor-cards.css";
+---
+
+<section class="professional" id="professional">
+  <!-- Intro to Our Team -->
+  <div class="container">
+    <div class="section__header">
+      <h2 class="section__title">Meet Our Team</h2>
+      <p class="section__description">
+        Our team of professionals is here to provide you with the best <br />
+        professional experience. Learn more about our experts below.
+      </p>
+    </div>
+
+    <!-- Loading State -->
+    <div data-state="loading" data-active="true" class="loading">
+      Loading doctors...
+    </div>
+
+    <!-- Error State -->
+    <div data-state="error" data-active="false" class="error"></div>
+
+    <!-- Success State -->
+    <div data-state="success" data-active="false" class="container">
+      <div id="professionalGrid" class="professional__grid"></div>
+    </div>
+  </div>
+</section>
+
+<dialog id="bookingDialog">
+  <div class="modal-content">
+    <button class="modal-close" aria-label="Close modal">×</button>
+    <iframe class="booking-iframe" id="bookingIframe" title="Booking Form"
+    ></iframe>
+  </div>
+</dialog>
+
+<!-- end Google Calendar Appointment Scheduling -->
+
+<script>
+  import { BASE_URL } from "../../const";
+
+  document.addEventListener("DOMContentLoaded", async () => {
+    // Your existing DOM elements
+    const loadingElement = document.querySelector(
+      '[data-state="loading"]',
+    ) as HTMLElement;
+    const errorElement = document.querySelector(
+      '[data-state="error"]',
+    ) as HTMLElement;
+    const successElement = document.querySelector(
+      '[data-state="success"]',
+    ) as HTMLElement;
+    const professionalGrid = document.querySelector(
+      "#professionalGrid",
+    ) as HTMLElement;
+
+    // Modal elements
+    const bookingDialog = document.querySelector(
+      "#bookingDialog",
+    ) as HTMLDialogElement;
+    const bookingIframe = document.querySelector(
+      "#bookingIframe",
+    ) as HTMLIFrameElement;
+    const modalClose = document.querySelector(
+      ".modal-close",
+    ) as HTMLButtonElement;
+
+    // Event delegation for Book Now buttons
+    document.addEventListener("click", (event) => {
+      // Check if clicked element or its parent is a Book Now button
+      const bookNowButton = event.target as HTMLElement | null;
+      if (bookNowButton && "appointmentid" in bookNowButton.dataset) {
+        bookingIframe.src = `https://calendar.app.google/${bookNowButton.dataset.appointmentid}`;
+        // Show modal
+        bookingDialog?.showModal();
+      }
+    });
+
+    // Close modal handlers
+    modalClose.addEventListener("click", () => bookingDialog.close());
+    bookingDialog.addEventListener("click", (event) => {
+      if (event.target === bookingDialog) bookingDialog.close();
+    });
+
+    try {
+      // Your existing fetch logic
+      loadingElement.setAttribute("data-active", "true");
+      const response = await fetch(`${BASE_URL}/user/getAllDoctors`, {
+        credentials: "include",
+      });
+
+      if (response.status === 401) {
+        loadingElement.setAttribute("data-active", "false");
+        errorElement.setAttribute("data-active", "true");
+        errorElement.innerHTML = `
+          <span>You are not authorized to view this content. Please log in.</span>
+          <div style="text-align: center; margin-top: 1rem;">
+            <button class="btn btn--outline" data-open-auth="signin">Sign in</button>
+            <button class="btn btn--primary" data-open-auth="signup">Sign up</button>
+          </div>`;
+        return;
+      }
+
+      if (!response.ok) throw new Error("Failed to fetch doctors");
+
+      const { status, data } = await response.json();
+      if (status !== 200) throw Error("Failed to fetch doctors");
+
+      loadingElement.setAttribute("data-active", "false");
+      successElement.setAttribute("data-active", "true");
+
+      // Render cards with data-doctor-id attribute
+      data?.forEach((doctor: any) => {
+        const card = document.createElement("article");
+        card.className = "professional-card";
+        card.innerHTML = `
+          <img
+            src="${doctor.profilePicture || "https://via.placeholder.com/120"}"
+            alt="Dr. ${doctor.name}"
+            class="professional-card__image"
+          />
+          <div class="professional-card__content">
+            <h3 class="professional-card__name">${doctor.name}</h3>
+            <h3 class="professional-card__title">${doctor.title}</h3>
+            <p class="professional-card__description">${doctor.bio}</p>
+            <div class="professional-card__footer">
+              <button class="btn btn--primary" data-appointmentID="${doctor.appointmentID}">Book now</button>
+            </div>
+          </div>
+        `;
+        professionalGrid.appendChild(card);
+      });
+    } catch (error: any) {
+      loadingElement.setAttribute("data-active", "false");
+      errorElement.setAttribute("data-active", "true");
+      errorElement.textContent = error.message;
+      console.error(error);
+    }
+  });
+</script>
+
+<style>
+  .professional {
+    padding: 8rem 0;
+    background-color: #f9f9f9;
+  }
+  .professional__header {
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+  [data-state="loading"],
+  [data-state="error"],
+  [data-state="success"] {
+    display: none;
+  }
+  [data-state="loading"][data-active="true"],
+  [data-state="error"][data-active="true"],
+  [data-state="success"][data-active="true"] {
+    display: block;
+  }
+  .loading {
+    text-align: center;
+    font-size: 1.25rem;
+    color: #007bff; /* Primary color for loading state */
+  }
+  .error {
+    text-align: center;
+    font-size: 1.25rem;
+    color: #dc3545; /* Danger color for error state */
+  }
+  [data-state="success"] {
+    color: #28a745; /* Success color for success state */
+  }
+
+  .professional {
+    padding: 8rem 0;
+    background-color: #f9f9f9;
+  }
+  /* ... (keep your existing styles) ... */
+
+  /* Modal styles */
+  dialog {
+    border: none;
+    border-radius: 8px;
+    padding: 0;
+    width: 100%;
+    max-width: 90vh;
+    background: white;
+  }
+
+  dialog::backdrop {
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
+  }
+
+  .modal-content {
+    position: relative;
+    padding: 2rem;
+  }
+
+  .modal-close {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+  }
+
+  .booking-iframe {
+    width: 100%;
+    height: 600px;
+    border: none;
+    border-radius: 4px;
+  }
+</style>

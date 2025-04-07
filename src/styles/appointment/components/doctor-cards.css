@@ -1,0 +1,72 @@
+/* General container for the grid */
+.professional__grid {
+  display: grid;
+  grid-template-columns:repeat(auto-fit, minmax(300px, 346px));
+  gap: 2rem;
+  margin-top: 2rem;
+  justify-items: center;
+}
+
+/* Card styling */
+.professional-card {
+  background-color: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  text-align: center;
+  max-width: 350px;
+  text-transform: capitalize;
+}
+
+.professional-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+}
+
+/* Image styling */
+.professional-card__image {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin: 1.5rem auto 1rem;
+  border: 3px solid #e0e0e0;
+}
+
+/* Content styling */
+.professional-card__content {
+  padding: 1rem 1.5rem;
+}
+
+.professional-card__title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 0.5rem;
+}
+
+.professional-card__name {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 0.5rem;
+}
+
+.professional-card__description {
+  display: -webkit-box;
+  -webkit-line-clamp: 3; /* Limit to 3 lines */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 1rem;
+  color: #666;
+  margin-bottom: 1.5rem;
+  line-height: 1.5;
+}
+
+/* Footer with button */
+.professional-card__footer {
+  margin-top: auto;
+}

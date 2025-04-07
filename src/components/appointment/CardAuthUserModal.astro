@@ -3,12 +3,12 @@ import "../../styles/appointment/components/cardAuthUserModal.css";
 ---
 
 <!-- Single container for all states -->
-<div id="user-info-section" class="user-info-container">
+<div id="user-info-section" class="user-info-container" style="display: none">
   <div class="user-info-status"></div>
 </div>
 
 <script>
-  import { AuthStorage, UserStorage } from "../../helpers";
+  import { UserStorage } from "../../helpers";
   import { stateModalAuth } from "./stateModalAuth";
   import { AUTH_ENDPOINTS } from "../../const";
 
@@ -38,16 +38,33 @@ import "../../styles/appointment/components/cardAuthUserModal.css";
 
   // Set up listeners
   function setUpListeners() {
-    stateModalAuth.modal?.addEventListener("fetched-user-auth-modal", () =>
-      fetchUserInfo(),
+    stateModalAuth.modal?.addEventListener(
+      "fetched-user-auth-modal",
+      (e: Event) => {
+        const customEvent = e as CustomEvent;
+        fetchUserInfo(customEvent?.detail);
+      },
     );
   }
 
-  document.addEventListener("DOMContentLoaded", setUpListeners);
+  document.addEventListener("DOMContentLoaded", () => {
+    setUpListeners();
+    fetchUserLocalStorage();
+  });
+
+  function fetchUserLocalStorage() {
+    if (!UserStorage.getData()) {
+      return;
+    }
+    const user = JSON.parse(UserStorage.getData() || "{}");
+    state.userInfo = user;
+    state.status = "success";
+    render();
+  }
 
   // Main render function
   function render() {
-    console.log(state.status, userInfoSection);
+    userInfoSection.style.display = "block";
     switch (state.status) {
       case "loading":
         userInfoStatus.innerHTML = `
@@ -92,19 +109,20 @@ import "../../styles/appointment/components/cardAuthUserModal.css";
           );
         });
         break;
+
       default:
         userInfoSection.style.display = "none";
     }
   }
 
-  async function fetchUserInfo() {
+  async function fetchUserInfo(token: string) {
     try {
       // Update state to loading
       state.status = "loading";
       state.userInfo = null;
       state.error = null;
       render();
-
+      console.log("Token:", token);
       const endpoint =
         AUTH_ENDPOINTS[stateModalAuth.mode as keyof typeof AUTH_ENDPOINTS];
 
@@ -114,7 +132,7 @@ import "../../styles/appointment/components/cardAuthUserModal.css";
         headers: {
           "Content-Type": "application/json", // Explicitly set content type
         },
-        body: JSON.stringify(AuthStorage.getToken()),
+        body: JSON.stringify(token),
       });
 
       if (!response.ok) throw new Error("Failed to get user info");
@@ -125,7 +143,7 @@ import "../../styles/appointment/components/cardAuthUserModal.css";
       state.status = "success";
       state.userInfo = data?.user;
       UserStorage.setData(JSON.stringify(state.userInfo));
-      
+      authDone();
     } catch (error: any) {
       // Update state to error
       state.status = "error";
@@ -135,5 +153,13 @@ import "../../styles/appointment/components/cardAuthUserModal.css";
     } finally {
       render();
     }
+  }
+
+  function authDone() {
+    document.cookie = "auth=true; path=/; secure; samesite=strict";
+    const event = new CustomEvent("auth-done", {
+      detail: { user: state.userInfo },
+    });
+    document.body.dispatchEvent(event);
   }
 </script>
