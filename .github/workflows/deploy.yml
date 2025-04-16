@@ -38,6 +38,6 @@ jobs:
         uses: denoland/deployctl@v1
         with:
           project: "jalvarezme-portafolio-86"
-          root: "dist"
+          files: "dist"
           
           
