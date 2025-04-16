@@ -37,8 +37,9 @@ jobs:
       - name: Upload to Deno Deploy
         uses: denoland/deployctl@v1
         with:
-          project: "jalvarezme-portafolio-75"
-          entrypoint: "index.html"
-          root: "dist"
+          project: "jalvarezme-portafolio-75"          
+          entrypoint: "https://deno.land/std/http/file_server.ts"  # Deno's static file server
+          root: "dist"  # Your Astro build directory
+          include: "**/*"  # Include all files in the dist directory
           
           
