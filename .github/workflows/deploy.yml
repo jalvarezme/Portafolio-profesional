@@ -39,6 +39,6 @@ jobs:
         with:
           project: "jalvarezme-portafolio-86"
           root: "dist"
-          entrypoint: "dist/index.html"
+          entrypoint: "index.html"
           
           
