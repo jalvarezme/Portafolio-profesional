@@ -1,0 +1,181 @@
+---
+import "../../styles/appointment/components/cardAuthUserModal.css";
+---
+
+<!-- Single container for all states -->
+<div id="user-info-sectio" class="user-info-containe" style="display: none">
+  <div class="user-info-statu"></div>
+</div>
+
+<script>
+  import { UserStorage } from "../../helpers";
+
+  interface UserInfo {
+    profilePicture?: string;
+    name?: string;
+    email?: string;
+  }
+
+  const state: {
+    status: "idle" | "loading" | "success" | "error";
+    userInfo: UserInfo | null;
+    error: string | null;
+  } = {
+    status: "idle", // 'idle' | 'loading' | 'success' | 'error'
+    userInfo: null,
+    error: null,
+  };
+
+  // DOM Elements
+  const userInfoSection = document.querySelector(
+    "#user-info-sectio",
+  ) as HTMLElement;
+  const userInfoStatus = userInfoSection?.querySelector(
+    ".user-info-statu",
+  ) as HTMLElement;
+
+
+  document.addEventListener("DOMContentLoaded", () => {
+    fetchUserLocalStorage();
+  });
+
+  function fetchUserLocalStorage() {
+    if (!UserStorage.getData()) {
+      return;
+    }
+    const user = JSON.parse(UserStorage.getData() || "{}");
+    state.userInfo = user;
+    state.status = "success";
+    render();
+  }
+
+  // Main render function
+  function render() {
+    userInfoSection.style.display = "block";
+    switch (state.status) {
+      case "loading":
+        userInfoStatus.innerHTML = `
+          <div class="status-container status-loading">
+            <div class="status-message">
+              <span class="loading-spinner"></span>
+              <span>Loading your information...</span>
+            </div>
+          </div>
+        `;
+        break;
+
+      case "error":
+        userInfoStatus.innerHTML = `
+          <div class="status-container status-error">
+            <div class="status-message">
+              <span>⚠️ ${state.error || "Failed to fetch user information"}</span>
+            </div>
+          </div>
+        `;
+        break;
+
+      case "success":
+        userInfoStatus.innerHTML = `
+      
+          <div class="user-info-card">
+            <img id="user-avatar" src="${state.userInfo?.profilePicture || ""}" 
+                 alt="User avatar" class="user-avatar" />
+            <div class="user-details">
+              <h4 class="user-name">${state.userInfo?.name || "Google User"}</h4>
+              <p class="user-email">${state.userInfo?.email || ""}</p>
+            </div>
+          </div>
+        `;
+        
+        break;
+
+      default:
+        userInfoSection.style.display = "none";
+    }
+  }
+
+</script>
+
+
+<style>
+  /* Minimalist Container */
+.user-info-containe {
+  width: 280px;
+  margin: 0rem auto;
+  padding: 24px 0px;
+  background: white;
+
+
+  /* Status Messages */
+  .status-container {
+    padding: 16px;
+    text-align: center;
+    font-size: 13px;
+    color: #555;
+  }
+
+  .status-loading {
+    background: #fafafa;
+    border-radius: 8px;
+  }
+
+  .status-error {
+    background: #fff5f5;
+    color: #ff4d4d;
+    border-radius: 8px;
+  }
+
+  /* Delicate Loading Spinner */
+  .loading-spinner {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    border: 2px solid rgba(0, 0, 0, 0.05);
+    border-top-color: #888;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin-right: 8px;
+  }
+
+  @keyframes spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  /* Compact User Card */
+  .user-info-card {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+
+  .user-avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 1px solid #f0f0f0;
+  }
+
+  .user-details {
+    flex: 1;
+  }
+
+  .user-name {
+    margin: 0;
+    font-size: 15px;
+    font-weight: 500;
+    color: #333;
+    text-transform: capitalize;
+    letter-spacing: 0.2px;
+  }
+
+  .user-email {
+    margin: 3px 0 0;
+    font-size: 13px;
+    color: #777;
+  }
+}
+</style>

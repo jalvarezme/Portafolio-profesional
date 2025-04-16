@@ -7,7 +7,7 @@ Porfolio
 
 Appointment
 
-1. Create env prod and dev file for URL endpoints 
-2. Make personal viewport for the appointment page
+1. Create env prod and dev file for URL endpoints
+2. Handle token experation in frontend and redirect to login page
 
 

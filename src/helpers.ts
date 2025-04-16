@@ -174,3 +174,22 @@ export function getCookie(name: string) {
   }
   return null;
 }
+
+// Add this to your helpers file
+export const authFetch = async (url: string, options: RequestInit = {}) => {
+  const token = localStorage.getItem('jwtToken');
+  
+  const headers: Record<string, string> = {
+    'Content-Type': 'application/json',
+    ...options.headers as Record<string, string>,
+  };
+  
+  if (token) {
+    headers['Authorization'] = `Bearer ${token}`;
+  }
+  
+  return fetch(url, {
+    ...options,
+    headers
+  });
+};

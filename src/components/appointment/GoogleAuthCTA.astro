@@ -32,7 +32,8 @@
 </div>
 
 <script>
-  import { AuthStorage, UserStorage } from "../../helpers";
+  import { BASE_URL, HOST } from "../../const";
+
   import { stateModalAuth } from "./stateModalAuth";
 
   const statusEl = document.querySelector(`#auth-status`) as HTMLElement;
@@ -43,7 +44,7 @@
       openGooglePopupAuth();
     } catch (error) {
       console.log(error);
-      hideStatus();
+      showStatus("error", "Authentication failed");
     }
   }
 
@@ -67,9 +68,9 @@
     const height = 600;
     const left = (screen.width - width) / 2;
     const top = (screen.height - height) / 2;
-
+    const baseUrl = BASE_URL;
     const popup = window.open(
-      "http://localhost:8000/api/v1/auth/google",
+      `${BASE_URL}/auth/google`,
       "googleAuth",
       `width=${width},height=${height},top=${top},left=${left}`,
     );
@@ -90,11 +91,8 @@
       }
     }, 500);
 
-    // Listen for messages from the popup
     const messageHandler = (event: MessageEvent) => {
-      if (event.origin !== "http://localhost:8000") {
-        return;
-      }
+      if (event.origin !== HOST) return;
 
       const response = event.data;
 
@@ -105,9 +103,13 @@
         setTimeout(() => {
           hideStatus();
         }, 3000);
+
+        // Store the Google token temporarily
+        localStorage.setItem("googleToken", response.data.token);
+
         stateModalAuth.modal?.dispatchEvent(
           new CustomEvent("fetched-user-auth-modal", {
-            detail: response.data,
+            detail: response.data.token, // Pass just the token
           }),
         );
       }

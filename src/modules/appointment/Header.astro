@@ -25,6 +25,7 @@ import "../../styles/appointment/components/header.css";
                     Sign up
                 </button>
                 <button class="btn btn--outline" data-logout> logout </button>
+                <a href="/appointment/profile" class="btn btn--outline">Profile</a>
             </div>
         </nav>
     </div>
@@ -32,7 +33,7 @@ import "../../styles/appointment/components/header.css";
 
 <script>
     import { BASE_URL } from "../../const";
-    import { UserStorage, getCookie } from "../../helpers";
+    import { UserStorage, getCookie, authFetch } from "../../helpers";
 
     const header = document.querySelector("header");
     const constrolsAuth = header?.querySelector(
@@ -53,29 +54,43 @@ import "../../styles/appointment/components/header.css";
 
     async function logout() {
         try {
-            const response = await fetch(`${BASE_URL}/auth/logout`, {
-                method: "POST",
-                credentials: "include",
+            // Use authFetch for authenticated requests
+            const response = await authFetch(`${BASE_URL}/auth/logout`, {
+                method: "POST"
             });
+
             if (!response.ok) {
-                throw new Error("Failed to fetch doctors");
+                throw new Error("Failed to logout");
             }
-            const { status, data } = await response.json();
-            document.cookie =
-                "auth=; path=/; secure; samesite=strict; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+
+            // Clear all auth-related storage
+            localStorage.removeItem('jwtToken');
+            localStorage.removeItem('googleToken');
             UserStorage?.clearData();
-            constrolsAuth.dataset.controls = "non-auth";
-            window.location.replace("http://localhost:4321/appointment/home");
+            
+            // Update UI
+            if (constrolsAuth?.dataset.controls) {
+                constrolsAuth.dataset.controls = "non-auth";
+            }
+            
+            // Redirect to home
+            window.location.replace("/appointment/home");
         } catch (error) {
-            console.log(error);
+            console.error("Logout error:", error);
         }
     }
 
-    (function () {
-        const isAuth = getCookie("auth");
-        if (isAuth) {
+    (function initAuthState() {
+        const jwtToken = localStorage.getItem('jwtToken');
+        const userData = UserStorage.getData();
+        
+        if (jwtToken && userData) {
             constrolsAuth.dataset.controls = "auth";
-            return;
+        } else {
+            // Clear any residual tokens if no user data exists
+            localStorage.removeItem('jwtToken');
+            localStorage.removeItem('googleToken');
+            constrolsAuth.dataset.controls = "non-auth";
         }
     })();
 </script>

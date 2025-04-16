@@ -8,7 +8,7 @@ import "../../styles/appointment/components/cardAuthUserModal.css";
 </div>
 
 <script>
-  import { UserStorage } from "../../helpers";
+  import { UserStorage, AuthStorage } from "../../helpers";
   import { stateModalAuth } from "./stateModalAuth";
   import { AUTH_ENDPOINTS } from "../../const";
 
@@ -116,50 +116,49 @@ import "../../styles/appointment/components/cardAuthUserModal.css";
   }
 
   async function fetchUserInfo(token: string) {
-    try {
-      // Update state to loading
-      state.status = "loading";
-      state.userInfo = null;
-      state.error = null;
-      render();
-      console.log("Token:", token);
-      const endpoint =
-        AUTH_ENDPOINTS[stateModalAuth.mode as keyof typeof AUTH_ENDPOINTS];
+  try {
+    state.status = "loading";
+    state.userInfo = null;
+    state.error = null;
+    render();
+    
+    const endpoint = AUTH_ENDPOINTS[stateModalAuth.mode as keyof typeof AUTH_ENDPOINTS];
 
-      const response = await fetch(endpoint, {
-        method: "POST",
-        credentials: "include", // required for cookies
-        headers: {
-          "Content-Type": "application/json", // Explicitly set content type
-        },
-        body: JSON.stringify(token),
-      });
-
-      if (!response.ok) throw new Error("Failed to get user info");
-
-      const { data } = await response.json();
-
-      // Update state to success
-      state.status = "success";
-      state.userInfo = data?.user;
-      UserStorage.setData(JSON.stringify(state.userInfo));
-      authDone();
-    } catch (error: any) {
-      // Update state to error
-      state.status = "error";
-      state.error = error.message || "Failed to fetch user information";
-
-      console.error("Error fetching user info:", error);
-    } finally {
-      render();
-    }
-  }
-
-  function authDone() {
-    document.cookie = "auth=true; path=/; secure; samesite=strict";
-    const event = new CustomEvent("auth-done", {
-      detail: { user: state.userInfo },
+    const response = await fetch(endpoint, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}` // Add token to header
+      },
+      body: JSON.stringify({ token }) // Send token in body if needed
     });
-    document.body.dispatchEvent(event);
+
+    if (!response.ok) throw new Error("Failed to get user info");
+
+    const { data } = await response.json();
+
+    // Store the JWT token received from the backend
+    if (data.token) {
+      localStorage.setItem('jwtToken', data.token);
+    }
+
+    state.status = "success";
+    state.userInfo = data?.user;
+    UserStorage.setData(JSON.stringify(state.userInfo));
+    authDone();
+  } catch (error: any) {
+    state.status = "error";
+    state.error = error.message || "Failed to fetch user information";
+    console.error("Error fetching user info:", error);
+  } finally {
+    render();
   }
+}
+function authDone() {
+  // Remove cookie setting
+  const event = new CustomEvent("auth-done", {
+    detail: { user: state.userInfo },
+  });
+  document.body.dispatchEvent(event);
+}
 </script>

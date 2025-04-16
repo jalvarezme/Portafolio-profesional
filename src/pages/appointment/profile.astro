@@ -1,0 +1,408 @@
+---
+import CardAuthUserModal from "../../components/appointment/CardAuthUserModal.astro";
+import Appoinment from "../../layouts/Appoinment.astro";
+import FAQ from "../../modules/appointment/FAQ.astro";
+import UserInfo from "../../components/appointment/UserInfo.astro";
+---
+
+<Appoinment>
+  <div class="container">
+    <UserInfo />
+  </div>
+
+  <div class="container">
+    <div id="appointments-container">
+      <h2 class="appointments-title">My Appointments</h2>
+
+      <!-- Status States -->
+      <div id="loading-state" class="status-message loading">
+        <div class="spinner"></div>
+        <span>Loading your appointments...</span>
+      </div>
+
+      <div id="error-state" class="status-message error">
+        <p id="error-message"></p>
+        <div id="auth-actions" class="auth-actions">
+          <button class="btn btn--outline" data-open-auth="signin"
+            >Sign In</button
+          >
+        </div>
+        <br />
+        <br />
+        <button id="retry-btn" class="btn btn--primary">Try Again</button>
+      </div>
+
+      <br />
+      <br />
+      <br />
+
+      <div id="success-state" class="status-message success">
+        <span id="success-message"></span>
+      </div>
+
+      <!-- Appointments List -->
+      <div id="appointments-list" class="appointments-grid"></div>
+
+      <!-- Empty State -->
+      <div id="empty-state" class="status-message empty">
+        <span>No appointments scheduled</span>
+        <button id="book-btn" class="btn btn--primary">Book Now</button>
+      </div>
+    </div>
+  </div>
+
+  <FAQ />
+</Appoinment>
+
+<script>
+  import { BASE_URL } from "../../const.ts";
+  import { authFetch } from "../../helpers";
+
+  document.addEventListener("DOMContentLoaded", async () => {
+    // DOM Elements
+    const container = {
+      loading: document.querySelector("#loading-state") as HTMLElement,
+      error: document.querySelector("#error-state") as HTMLElement,
+      errorMsg: document.querySelector("#error-message") as HTMLElement,
+      success: document.querySelector("#success-state") as HTMLElement,
+      successMsg: document.querySelector("#success-message") as HTMLElement,
+      authActions: document.querySelector("#auth-actions") as HTMLElement,
+      list: document.querySelector("#appointments-list") as HTMLElement,
+      empty: document.querySelector("#empty-state") as HTMLElement,
+      retryBtn: document.querySelector("#retry-btn") as HTMLElement,
+      bookBtn: document.querySelector("#book-btn") as HTMLElement,
+    };
+
+    // UI State Handlers
+    const resetUI = () => {
+      container.loading.style.display = "none";
+      container.error.style.display = "none";
+      container.success.style.display = "none";
+      container.empty.style.display = "none";
+      container.list.innerHTML = "";
+    };
+    // Initial state
+    resetUI();
+
+    // Fetch appointments
+    const fetchAppointments = async () => {
+      try {
+        resetUI(); // Add this line
+        showLoading();
+
+        // Use authFetch instead of regular fetch
+        const response = await authFetch(
+          `${BASE_URL}/appoinment/getAllAppointment/`,
+        );
+
+        if (response.status === 401) {
+          throw new Error("Please sign in to view your appointments");
+        }
+
+        if (!response.ok) {
+          throw new Error("Failed to load appointments");
+        }
+
+        const { status, data } = await response.json();
+        if (status !== 200) throw new Error(data?.message || "Request failed");
+
+        showSuccess("Appointments loaded successfully");
+        renderAppointments(data);
+      } catch (err: any) {
+        showError(err.message);
+      } finally {
+        container.loading.style.display = "none";
+      }
+    };
+
+    // Render appointments
+    const renderAppointments = (events: any) => {
+      container.list.innerHTML = "";
+      container.empty.style.display = "none"; // Add this line
+
+      if (!events || events.length === 0) {
+        showEmptyState();
+        return;
+      }
+
+      events.forEach((event: any) => {
+        const card = createAppointmentCard(event);
+        container.list.appendChild(card);
+      });
+    };
+
+    // Create single appointment card
+    const createAppointmentCard = (event: any) => {
+      const card = document.createElement("article");
+      card.className = "appointment-card";
+
+      // Determine status
+      const now = new Date();
+      const startDate = new Date(event.start.dateTime);
+      const endDate = new Date(event.end.dateTime);
+      const isCompleted = endDate < now;
+      const isUpcoming = startDate > now;
+      const status = isCompleted
+        ? "completed"
+        : isUpcoming
+          ? "upcoming"
+          : "in-progress";
+
+      // Format date/time
+      const formattedDate = startDate.toLocaleDateString("es-CR", {
+        weekday: "short",
+        month: "short",
+        day: "numeric",
+      });
+
+      const formattedTime = `
+        ${startDate.toLocaleTimeString("es-CR", { hour: "2-digit", minute: "2-digit" })} 
+        - 
+        ${endDate.toLocaleTimeString("es-CR", { hour: "2-digit", minute: "2-digit" })}
+      `;
+
+      // Extract details
+      const [service, doctor] = event.summary
+        .split("-")
+        .map((s: any) => s.trim());
+
+      card.innerHTML = `
+        <div class="card-status ${status}">
+          ${
+            status === "upcoming"
+              ? "Upcoming"
+              : status === "completed"
+                ? "Completed"
+                : "In Progress"
+          }
+        </div>
+        
+        <div class="card-content">
+          <div class="card-header">
+            <h3 class="card-service">${service || "Appointment"}</h3>
+            <span class="card-date">${formattedDate}</span>
+          </div>
+          
+          <div class="card-time">${formattedTime}</div>
+          
+          <div class="card-details">
+            <p class="card-doctor">
+              <span class="icon">👨‍⚕️</span>
+              ${doctor || "Dr. Mendoza"}
+            </p>
+            <p class="card-location">
+              <span class="icon">📍</span>
+              ${event.location || "Virtual"}
+            </p>
+          </div>
+        </div>
+        
+        <div class="card-actions">
+          <a href="${event.htmlLink}" target="_blank" class="btn btn--outline">
+            View Details
+          </a>
+        </div>
+      `;
+
+      return card;
+    };
+
+    const showLoading = () => {
+      resetUI();
+      container.loading.style.display = "flex";
+    };
+
+    const showError = (message: string) => {
+      resetUI();
+      container.errorMsg.textContent = message;
+      container.error.style.display = "block";
+      container.authActions.style.display = message.includes("sign in")
+        ? "block"
+        : "none";
+    };
+
+    const showSuccess = (message: string) => {
+      resetUI(); // Add this line
+      container.successMsg.textContent = message;
+      container.success.style.display = "flex";
+      setTimeout(() => {
+        container.success.style.display = "none";
+      }, 3000);
+    };
+
+    const showEmptyState = () => {
+      resetUI();
+      container.list.innerHTML = ""; // Add this line
+      container.empty.style.display = "flex";
+    };
+
+    // Event Listeners
+    container.retryBtn.addEventListener("click", fetchAppointments);
+    container.bookBtn.addEventListener("click", () => {
+      // Handle book now action
+      console.log("Initiate booking flow");
+    });
+
+    // Initial fetch
+    fetchAppointments();
+  });
+</script>
+
+<style is:inline>
+  .appointments-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    color: #111827;
+  }
+  /* Modern Card Styles */
+  .appointment-card {
+    position: relative;
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    border: 1px solid #e5e7eb;
+    transition: all 0.3s ease;
+    margin-bottom: 1.5rem;
+  }
+
+  .appointment-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+  }
+
+  .card-status {
+    position: absolute;
+    bottom: 20px;
+    left: 12px;
+    padding: 4px 10px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    border-radius: 20px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .card-status.upcoming {
+    background: #e0f2fe;
+    color: #0369a1;
+  }
+
+  .card-status.completed {
+    background: #dcfce7;
+    color: #166534;
+  }
+
+  .card-status.in-progress {
+    background: #fef3c7;
+    color: #92400e;
+  }
+
+  .card-content {
+    padding: 1.5rem;
+  }
+
+  .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1rem;
+  }
+
+  .card-service {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #111827;
+    margin: 0;
+    line-height: 1.3;
+  }
+
+  .card-date {
+    font-size: 0.85rem;
+    color: #6b7280;
+    background: #f9fafb;
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-weight: 500;
+  }
+
+  .card-time {
+    display: inline-block;
+    background: #f3f4f6;
+    padding: 6px 10px;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    color: #374151;
+    margin-bottom: 1.25rem;
+    font-weight: 500;
+  }
+
+  .card-details {
+    display: grid;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .card-doctor,
+  .card-location {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin: 0;
+    font-size: 0.95rem;
+    color: #4b5563;
+  }
+
+  .card-doctor {
+    font-weight: 500;
+  }
+
+  .icon {
+    font-size: 1.1rem;
+    opacity: 0.8;
+  }
+
+  .card-actions {
+    padding: 0 1.5rem 1.5rem;
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .btn--outline {
+    background: white;
+    border: 1px solid #d1d5db;
+    color: #374151;
+    padding: 8px 16px;
+    font-size: 0.85rem;
+  }
+
+  .btn--outline:hover {
+    background: #f9fafb;
+    border-color: #9ca3af;
+  }
+
+  /* Grid Layout */
+  .appointments-grid {
+    display: grid;
+    gap: 1.5rem;
+  }
+
+  @media (min-width: 768px) {
+    .appointments-grid {
+      grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    }
+  }
+
+  #error-message {
+    margin-bottom: 1rem;
+  }
+
+  #success-state {
+    background-color: #dcfce7;
+    color: #15803d;
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+  }
+</style>
