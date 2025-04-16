@@ -38,6 +38,7 @@ jobs:
         uses: denoland/deployctl@v1
         with:
           project: "jalvarezme-portafolio-86"
-          files: "dist"
+          root: "dist"
+          entrypoint: "dist/index.html"
           
           
