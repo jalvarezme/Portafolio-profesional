@@ -73,7 +73,7 @@ import "../../styles/appointment/components/doctor-cards.css";
       // Check if clicked element or its parent is a Book Now button
       const bookNowButton = event.target as HTMLElement | null;
       if (bookNowButton && "appointmentid" in bookNowButton.dataset) {
-        bookingIframe.src = `https://calendar.app.google/${bookNowButton.dataset.appointmentid}`;
+        bookingIframe.src = `https://calendar.google.com/calendar/appointments/schedules/${bookNowButton.dataset.appointmentid}?gv=true`;
         // Show modal
         bookingDialog?.showModal();
       }
