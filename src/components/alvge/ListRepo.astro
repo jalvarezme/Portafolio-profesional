@@ -1,0 +1,76 @@
+---
+const list = Astro.props.repositories as Repo[];
+const icons = Astro.props.icons as Icon[];
+
+type RouteIcon = {
+  light: string;
+  dark: string;
+};
+
+type Icon = {
+  title: string;
+  route: RouteIcon | string | null;
+};
+
+type Repo = {
+  id: number;
+  name: string;
+  description: string;
+  html_url: string;
+  topics: string[];
+  language: string;
+};
+
+const languageIcon = (repo: Repo) => {
+  const icon = icons.find(
+    (icon: Icon) => icon.title.toLowerCase() === repo.language.toLowerCase(),
+  );
+  return typeof icon?.route === "object"
+    ? icon.route?.light || icon.route?.dark
+    : icon?.route;
+};
+---
+
+
+<div>
+  {
+    list.map((repo: Repo) => (
+      <tr>
+        <td class="projects__name-cell"><a href={repo.html_url} target="_blank">{repo.name}</a></td>
+        <td class="projects__descrip-cell">{repo.description}</td>
+        <td class="projects__stack-cell">
+          <ul class="projects__stack-list">
+            {repo.topics.map((topic: string) => {
+              const icon = icons.find(
+                (icon: Icon) =>
+                  icon.title.toLowerCase().replace(/[\s.]/g, "") === topic.toLowerCase(),
+              );
+              let iconImage =
+                typeof icon?.route === "object"
+                  ? icon.route?.light || icon.route?.dark
+                  : icon?.route;
+              return (
+                <li class="projects__stack-item">
+                  <span class="icon-technology">
+                    {iconImage && (
+                      <img
+                        loading="lazy"
+                        src={iconImage}
+                        alt={icon?.title}
+                        class="projects__stack-icon"
+                      />
+                    )}
+                    <span>{topic}</span>
+                  </span>
+                </li>
+              );
+            })}
+          </ul>
+        </td>
+        <td class="projects_language-cell">
+          <img loading="lazy" src={languageIcon(repo)} alt="" />
+        </td>
+      </tr>
+    ))
+  }
+</div>

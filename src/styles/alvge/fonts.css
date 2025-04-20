@@ -33,3 +33,20 @@
     format("woff");
   font-display: swap;
 }
+
+
+
+@font-face {
+  font-family: "avenir-regular";
+  src: url("../../assets/fonts/AvenirNextCyr-Regular.woff")
+    format("woff");
+  font-display: swap;
+}
+
+
+@font-face {
+  font-family: "poppins-regular";
+  src: url("../../assets/fonts/Poppins-Regular.woff")
+    format("woff");
+  font-display: swap;
+}

@@ -2,7 +2,6 @@
 import "../../styles/appointment/components/cardAuthUserModal.css";
 ---
 
-
 <div id="user-info-section" class="user-info-container" style="display: none">
   <div class="user-info-status"></div>
 </div>
@@ -116,54 +115,54 @@ import "../../styles/appointment/components/cardAuthUserModal.css";
   }
 
   async function fetchUserInfo(token: string) {
-  try {
-    state.status = "loading";
-    state.userInfo = null;
-    state.error = null;
-    render();
-    
-    const endpoint = AUTH_ENDPOINTS[stateModalAuth.mode as keyof typeof AUTH_ENDPOINTS];
+    try {
+      state.status = "loading";
+      state.userInfo = null;
+      state.error = null;
+      render();
 
-    const response = await fetch(endpoint, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${token}` // Add token to header
-      },
-      body: JSON.stringify({ token }) // Send token in body if needed
-    }).then((res) => {
-      if (!res.ok) {
-        throw new Error("Failed to fetch user info");
+      const endpoint =
+        AUTH_ENDPOINTS[stateModalAuth.mode as keyof typeof AUTH_ENDPOINTS];
+
+      const response = await fetch(endpoint, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`, // Add token to header
+        },
+        body: JSON.stringify({ token }), // Send token in body if needed
+      }).then(async (res) => {
+        const data = await res.json();
+        if (!res.ok) {
+          throw new Error(data.message || "Failed to fetch user information");
+        }
+        return data;
+      });
+
+      const { data } = await response;
+
+      // Store the JWT token received from the backend
+      if (data.token) {
+        localStorage.setItem("jwtToken", data.token);
       }
-      return res.json();
-    });
 
-    console.log("Response:", response);
-
-    const { data } = await response;
-
-    // Store the JWT token received from the backend
-    if (data.token) {
-      localStorage.setItem('jwtToken', data.token);
+      state.status = "success";
+      state.userInfo = data?.user;
+      UserStorage.setData(JSON.stringify(state.userInfo));
+      authDone();
+    } catch (error: any) {
+      state.status = "error";
+      state.error = error.message || "Failed to fetch user information";
+      console.error("Error fetching user info:", error);
+    } finally {
+      render();
     }
-
-    state.status = "success";
-    state.userInfo = data?.user;
-    UserStorage.setData(JSON.stringify(state.userInfo));
-    authDone();
-  } catch (error: any) {
-    state.status = "error";
-    state.error = error.message || "Failed to fetch user information";
-    console.error("Error fetching user info:", error);
-  } finally {
-    render();
   }
-}
-function authDone() {
-  // Remove cookie setting
-  const event = new CustomEvent("auth-done", {
-    detail: { user: state.userInfo },
-  });
-  document.body.dispatchEvent(event);
-}
+  function authDone() {
+    // Remove cookie setting
+    const event = new CustomEvent("auth-done", {
+      detail: { user: state.userInfo },
+    });
+    document.body.dispatchEvent(event);
+  }
 </script>

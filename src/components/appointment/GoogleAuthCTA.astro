@@ -105,7 +105,7 @@
         }, 3000);
 
         // Store the Google token temporarily
-        localStorage.setItem("googleToken", response.data.token);
+        // localStorage.setItem("googleToken", response.data.token);
 
         stateModalAuth.modal?.dispatchEvent(
           new CustomEvent("fetched-user-auth-modal", {

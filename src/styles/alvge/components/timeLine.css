@@ -28,6 +28,7 @@
       text-align: left;
       margin-bottom: 1rem;
       padding-bottom: 8rem;
+      margin-left: 2rem;
     }
 
     span {
@@ -86,12 +87,13 @@
     .timeline__icon svg {
       width: 100%;
       height: 100%;
-      max-width: 32px;
+      max-width: 28px;
     }
 
     .timeline__title {
       font-size: 0.8rem;
-      font-family: "avenir", sans-serif;
+      font-family: "avenir-regular", sans-serif;
+      color: rgb(78, 78, 78);
       line-height: 1em;
       font-weight: bold;
     }

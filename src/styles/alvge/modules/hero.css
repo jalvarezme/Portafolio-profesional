@@ -1,6 +1,6 @@
 .hero-banner {
   /* background-color: black; */
-  overflow-x: clip ;
+  overflow-x: clip;
   color: black;
   height: 100vh;
   display: flex;
@@ -10,21 +10,7 @@
   position: relative;
   background: rgb(241, 255, 255);
   background: linear-gradient(121deg, #f1ffff 2%, #ffffff 22%);
-/* 
 
-  .gadient {
-    position: absolute;
-    top: 0;
-    right: -20%;
-    scale: 2;
-    opacity: 0.5;
-  }
-
-  svg {
-    position: absolute;
-    opacity: .9;
-    max-height: 40vh;
-  } */
 
   .hero-banner__title,
   .hero-banner__description {
@@ -37,11 +23,12 @@
     font-size: 4.5rem;
     line-height: 1em;
     letter-spacing: 0.4rem;
+    margin-left: 8px;
 
     @media (min-width: 768px) {
       font-size: 6.5rem;
       letter-spacing: 2rem;
-      margin-right: -30px;
+      margin-right: -24px;
     }
   }
 
@@ -52,9 +39,11 @@
     display: inline;
     letter-spacing: 0.8rem;
     font-size: 0.7rem;
+    margin-left: 12px;
 
     @media (min-width: 768px) {
       font-size: 1rem;
+      margin-left: 16px;
     }
 
     &::after {

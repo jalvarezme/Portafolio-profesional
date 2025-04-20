@@ -163,10 +163,18 @@
   }
 
   .about__intro {
-    font-family: "montserrat-bold", sans-serif;
+    font-weight: bold;
+    font-family: "poppins-regular", sans-serif;
     font-size: 1.2rem;
     line-height: 1.6;
     color: var(--blue--2);
+    margin-bottom: 16px;
+  }
+
+  .about__bio {
+    font-size: 1rem;
+    line-height: 1.6;
+    font-family: "avenir-regular", sans-serif;
     margin-bottom: 16px;
   }
 

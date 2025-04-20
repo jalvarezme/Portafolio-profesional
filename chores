@@ -1,11 +1,15 @@
-Porfolio
+Porfolio https://jalvarezme-portafolio-75.deno.dev
 
-1. Implement animation UI for the portfolio: https://silkhq.co/
-2. Implement intereactive bg color with intersection obbserver for the sticky header, use my lib
-3. 
+1. Change button styles to glass style
+2. Implement intereactive bg color with intersection obbserver for the sticky header, use my lib https://x.com/alex_krasikau/status/1897318589126074575?t=GyxeyY8iDXauxh9jJasfZQ&s=08 
+3. Scroll animation https://x.com/jh3yy/status/1714404585660379593 
+4. Implement animation UI for the portfolio: https://silkhq.co/
+5. Implement scroll snap for table in mobile
+6. Implement fixed table columns https://x.com/jh3yy/status/1902854170459152552?t=vwpaKmxBanMDXGL9kJvJZQ&s=08
+7. Implement hovers effects in css for subnav (my script used in client project)
 
 
-Appointment
+Appointment https://jalvarezme-portafolio-75.deno.dev/appointment/home/
 
 1. Create env prod and dev file for URL endpoints
 2. Handle token experation in frontend and redirect to login page
