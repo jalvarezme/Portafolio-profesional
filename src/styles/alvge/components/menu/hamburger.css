@@ -6,7 +6,7 @@
   display: flex;
   justify-content: flex-end;
   width: 27px;
-  /* margin-top: 20px; */
+  order: 3;
   height: 27px;
 
   @media (min-width: 768px) {
@@ -43,7 +43,7 @@
 }
 
 .portfolio-menu--hamburger span:nth-child(3) {
-  top: 18px;
+  top: 17px;
 }
 
 .portfolio-menu--hamburger.open {

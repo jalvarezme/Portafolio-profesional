@@ -429,20 +429,20 @@ import "../../styles/alvge/components/menu/index.css";
 
   <ul class="portfolio-menu__list">
     <li>
-      <a class="portfolio-menu__link" href="/acerca">About</a>
+      <a class="portfolio-menu__link" href="#about">About</a>
     </li>
     <li>
-      <a class="portfolio-menu__link" href="/proyectos">Experience</a>
+      <a class="portfolio-menu__link" href="#experience">Experience</a>
     </li>
     <li>
-      <a class="portfolio-menu__link" href="/contacto">Projects</a>
+      <a class="portfolio-menu__link" href="#projects">Projects</a>
     </li>
     <li>
-      <a class="portfolio-menu__link" href="/contacto">Contact</a>
+      <a class="portfolio-menu__link" href="#contact">Contact</a>
     </li>
     <li>
       <div class="portfolio-menu__lang">
-        <button>
+        <!-- <button>
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -450,7 +450,7 @@ import "../../styles/alvge/components/menu/index.css";
             height="24"
             viewBox="0 0 24 24"
             stroke-width="1.5"
-            stroke="currentColor"
+            stroke="white"
             class="size-6"
           >
             <path
@@ -459,7 +459,7 @@ import "../../styles/alvge/components/menu/index.css";
               d="m10.5 21 5.25-11.25L21 21m-9-3h7.5M3 5.621a48.474 48.474 0 0 1 6-.371m0 0c1.12 0 2.233.038 3.334.114M9 5.25V3m3.334 2.364C11.176 10.658 7.69 15.08 3 17.502m9.334-12.138c.896.061 1.785.147 2.666.257m-4.589 8.495a18.023 18.023 0 0 1-3.827-5.802"
             ></path>
           </svg>
-        </button>
+        </button> -->
       </div>
     </li>
   </ul>
@@ -489,9 +489,134 @@ import "../../styles/alvge/components/menu/index.css";
 <script>
   const menu = document.querySelector(".portfolio-menu--hamburger");
   const list = document.querySelector(".portfolio-menu__list");
+  const langButton = document.querySelector(".portfolio-menu__lang button");
+
+  // Modal creation
+  const modal = document.createElement("dialog");
+  modal.classList.add("lang-modal");
+  modal.innerHTML = `
+    <div class="lang-modal__content">
+      <button class="lang-modal__close" aria-label="Close">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+      <button class="lang-modal__btn button button-primary" data-lang="es">Español</button>
+      <button class="lang-modal__btn button button-primary" data-lang="en">English</button>
+    </div>
+  `;
+  document.body.appendChild(modal);
+
+  const closeModal = () => {
+    modal.close();
+  };
+
+  langButton?.addEventListener("click", () => {
+    modal.showModal();
+  });
+
+  modal.addEventListener("click", (e) => {
+    if (e.target.closest(".lang-modal__close")) {
+      closeModal();
+    }
+  });
+
+  modal.querySelectorAll(".lang-modal__btn").forEach((btn) => {
+    btn.addEventListener("click", async (e) => {
+      console.log(e.currentTarget);
+      const lang = (e.currentTarget as HTMLElement).getAttribute("data-lang");
+
+      // Try to find the iframe
+      var dropdow = document.querySelector(
+        ".goog-te-combo",
+      ) as HTMLOptionElement;
+
+      if (dropdow) {
+        console.log(lang);
+        dropdow.value = lang || ""; // Change to desired target language
+        console.log(dropdow);
+        // Create and dispatch change event
+        var event = new Event("change");
+        dropdow.dispatchEvent(event);
+      }
+
+      closeModal();
+    });
+  });
+
+  list?.addEventListener("click", (e) => {
+    const link = e.target.closest(".portfolio-menu__link");
+    console.log(link)
+    if (link) {
+      menu?.classList.remove("open");
+      list?.classList.remove("open");
+    }
+  });
 
   menu?.addEventListener("click", () => {
     menu?.classList.toggle("open");
     list?.classList.toggle("open");
   });
 </script>
+
+<div id="google_translate_element"></div>
+
+<script is:inline>
+  function googleTranslateElementInit() {
+    new google.translate.TranslateElement(
+      { pageLanguage: "en" },
+      "google_translate_element",
+    );
+  }
+</script>
+
+<script
+  defer
+  src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"
+></script>
+
+<style>
+  .lang-modal {
+    border: none;
+    border-radius: 8px;
+    padding: 0;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    text-align: center;
+  }
+
+  .lang-modal__content {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    position: relative;
+  }
+
+  .lang-modal__close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    cursor: pointer;
+  }
+
+  .lang-modal__btn {
+    margin: 10px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+  }
+
+  .lang-modal__btn[data-lang="es"] {
+    background-color: #f0ad4e;
+    color: white;
+  }
+
+  .lang-modal__btn[data-lang="en"] {
+    background-color: #5bc0de;
+    color: white;
+  }
+</style>

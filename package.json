@@ -9,9 +9,11 @@
     "astro": "astro"
   },
   "dependencies": {
+    "@emailjs/browser": "^4.4.1",
     "@octokit/core": "^6.1.5",
     "@octokit/types": "^14.0.0",
     "astro": "^5.4.1",
+    "izitoast": "^1.4.0",
     "sharp": "^0.34.1"
   }
 }

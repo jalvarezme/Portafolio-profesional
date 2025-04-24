@@ -1,0 +1,152 @@
+---
+import Social from "../../components/alvge/Social.astro";
+import "../../styles/alvge/modules/contact.css";
+---
+
+<section class="contact" id="contact">
+  <div class="container">
+    <h2 class="contact__title">
+      <span class="contact__title-eyebrow">Just contact me</span>
+      <div></div>
+      <span class="contact__title-headline"
+        >Problem solving for your bussiness</span
+      >
+    </h2>
+    <form id="contact-form" class="contact__form">
+      <div class="form__wrapper">
+        <input
+          aria-label="Email"
+          type="text"
+          id="email"
+          name="email"
+          required
+          placeholder="Enter your email address"
+        />
+        <button type="submit" class="button button-primary">contact me</button>
+      </div>
+    </form>
+    <div class="contact__socials">
+      <!-- <h2>Also you can check my socials!</h2> -->
+      <Social variant="left" height="large" />
+    </div>
+  </div>
+  <script
+    src="https://unpkg.com/@dotlottie/player-component@2.7.12/dist/dotlottie-player.mjs"
+    type="module"></script>
+  <dotlottie-player
+    src="https://lottie.host/bbe2f53f-b3e1-4c5d-8aae-1c4e1e208a71/cZqWCxhtTK.lottie"
+    background="transparent"
+    speed="1"
+    style="width: 300px; height: 300px"
+    loop
+    class="shape first-animation"
+    autoplay></dotlottie-player>
+  <dotlottie-player
+    src="https://lottie.host/bbe2f53f-b3e1-4c5d-8aae-1c4e1e208a71/cZqWCxhtTK.lottie"
+    background="transparent"
+    speed="1"
+    style="width: 300px; height: 300px"
+    loop
+    class="shape second-animation"
+    autoplay
+  >
+  </dotlottie-player>
+
+  <a href="#hero">
+    <dotlottie-player
+      src="https://lottie.host/dc3ad807-876b-4921-b402-3c801abe1da5/uRzOrpxEgn.lottie"
+      background="transparent"
+      speed="1"
+      style="width: 300px; height: 300px"
+      loop
+      class="scroll-top"
+      autoplay
+    >
+    </dotlottie-player>
+  </a>
+</section>
+
+<script>
+  import emailjs from "@emailjs/browser";
+  import iziToast from "izitoast";
+
+  console.log(iziToast);
+
+  // Initialize EmailJS
+  const EMAILJS_SERVICE_ID = "service_lqfiqmi";
+  const EMAILJS_TEMPLATE_ID = "template_lp0my1q";
+  const EMAILJS_PUBLIC_KEY_ID = "qY79p08kyacR2xbky";
+
+  // Load iziToast CSS (call this once)
+  export function loadToastStyles() {
+    const link = document.createElement("link");
+    link.rel = "stylesheet";
+    link.href =
+      "https://cdn.jsdelivr.net/npm/izitoast@1.4.0/dist/css/iziToast.min.css";
+    document.head.appendChild(link);
+  }
+
+  export async function handleFormSubmit(event: Event) {
+    event.preventDefault();
+
+    const form = event.target as HTMLFormElement;
+    const submitButton = form.querySelector(
+      'button[type="submit"]',
+    ) as HTMLButtonElement;
+    console.log(submitButton);
+    const originalButtonText = submitButton.textContent;
+
+    // Show loading state
+    submitButton.textContent = "Sending...";
+    submitButton.disabled = true;
+
+    try {
+      const response = await emailjs.sendForm(
+        EMAILJS_SERVICE_ID,
+        EMAILJS_TEMPLATE_ID,
+        form,
+        EMAILJS_PUBLIC_KEY_ID,
+      );
+
+      // Success toast
+      iziToast.success({
+        title: "Success",
+        message: "Message sent successfully!",
+        position: "topRight",
+        timeout: 5000,
+      });
+
+      form.reset();
+    } catch (error) {
+      console.error("Failed to send message:", error);
+
+      // Error toast
+      iziToast.error({
+        title: "Error",
+        message: "Failed to send message. Please try again.",
+        position: "topRight",
+        timeout: 5000,
+      });
+    } finally {
+      // Reset button
+      submitButton.textContent = originalButtonText;
+      submitButton.disabled = false;
+    }
+  }
+
+  function initEmailJSForm(formId: string) {
+    // Load toast styles
+    loadToastStyles();
+
+    const form = document.getElementById(formId);
+    if (form) {
+      form.addEventListener("submit", handleFormSubmit);
+      return () => form.removeEventListener("submit", handleFormSubmit);
+    }
+    return () => {};
+  }
+
+  document.addEventListener("DOMContentLoaded", () => {
+    initEmailJSForm("contact-form");
+  });
+</script>

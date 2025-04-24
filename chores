@@ -13,4 +13,3 @@ Appointment https://jalvarezme-portafolio-75.deno.dev/appointment/home/
 
 1. Create env prod and dev file for URL endpoints
 2. Handle token experation in frontend and redirect to login page
-

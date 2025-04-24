@@ -1,0 +1,48 @@
+.social {
+  background-color: white;
+  width: 100%;
+  display: flex;
+  color: black;
+  justify-content: center;
+  gap: 24px;
+  padding: 12px;
+  position: relative;
+
+  svg {
+    fill: black;
+    width: 24px;
+    stroke: black;
+    height: 24px;
+
+    path {
+      fill: black;
+      stroke: black;
+    }
+  }
+
+  &.social--left {
+    /* justify-content: start; */
+
+    @media (min-width:768px) {
+      justify-content: start;
+    }
+  }
+
+  &.social--right {
+    justify-content: end;
+  }
+
+  &.social--large {
+    svg {
+      fill: black;
+      width: 36px;
+      stroke: black;
+      height: 36px;
+
+      path {
+        fill: black;
+        stroke: black;
+      }
+    }
+  }
+}

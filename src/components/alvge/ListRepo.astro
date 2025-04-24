@@ -36,7 +36,7 @@ const languageIcon = (repo: Repo) => {
   {
     list.map((repo: Repo) => (
       <tr>
-        <td class="projects__name-cell"><a href={repo.html_url} target="_blank">{repo.name}</a></td>
+        <td class="projects__name-cell notranslate"><a href={repo.html_url} target="_blank">{repo.name}</a></td>
         <td class="projects__descrip-cell">{repo.description}</td>
         <td class="projects__stack-cell">
           <ul class="projects__stack-list">
@@ -60,7 +60,7 @@ const languageIcon = (repo: Repo) => {
                         class="projects__stack-icon"
                       />
                     )}
-                    <span>{topic}</span>
+                    <span class="notranslate">{topic}</span>
                   </span>
                 </li>
               );

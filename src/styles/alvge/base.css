@@ -13,12 +13,18 @@ html {
   /* 000025 */
   --blue--1: #00003b; 
   --blue--2: #00217c;
-  --blue--3: #e0fcff;
+  --blue--3: #f1ffff;
   --green--1: #013314;
   --green--2: #c3ffda;
   --yellow--3: #ffffcd;
   --yellow--4: #ffffd6;
   --purple--1: #e1cdff;
+}
+
+body {
+  position: initial;
+  min-height: unset;
+  top: 0 !important;
 }
 
 html {
@@ -41,6 +47,7 @@ dialog::backdrop {
 .button {
   display: inline-flex;
   align-items: center;
+  text-decoration: none;
   justify-content: center;
   padding: 0.75em 1.5em;
   min-width: 120px;
